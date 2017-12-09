@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Convert your python program into a shell one liner">
+    <meta name="author" content="Adam Weidner">
+    <link rel="icon" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Pyliner</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+          crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <main role="main" class="container">
+
+        <h1>Pyliner</h1>
+        <p>Convert your python program into a shell one liner</p>
+
+        <h2>Convert to one liner</h2>
+        <form>
+            <div class="form-group">
+                <label for="requirementsTxtForm">Contents of requirements.txt</label>
+                <textarea class="form-control" id="requirementsTxtArea" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="programForm">Program</label>
+                <textarea class="form-control" id="programTxtArea" rows="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="programForm">Output</label>
+                <textarea class="form-control" id="resultTxtArea" rows="3" readOnly></textarea>
+            </div>
+            <button id="copyToClipboard" class="btn"></i>Copy to Clipboard</button>
+        </form>
+    </main><!-- /.container -->
+
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+		
+
+    <script src="js/index.js"></script>
+  </body>
+</html>
+
