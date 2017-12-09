@@ -31,17 +31,22 @@ function createProgram(rawProgram) {
     return execute(btoa(inlineTransform(rawProgram)))
 }
 
-$("#programTxtArea").on("paste keyup", throttle(function() {
-    var contents = $("#programTxtArea").val();
+function getProgramOutputPart() {
+    return execute(
+        btoa(inlineTransform($("#programTxtArea").val())))
+}
 
-    if (contents) {
-        $("#resultTxtArea").val(
-            execute(
-                btoa(inlineTransform(contents))))
-    } else {
-        $("#resultTxtArea").val("")
-    }
-}, 100))
+function getRequirementsPart() {
+    return inlineRequirements($("#requirementsTxtArea").val())
+}
+
+var updateTextArea = throttle(function() {
+    contents = getRequirementsPart() + " && " + getProgramOutputPart()
+    $("#resultTxtArea").val(contents)
+}, 100)
+
+$("#requirementsTxtArea").on("paste keyup", updateTextArea)
+$("#programTxtArea").on("paste keyup", updateTextArea)
 
 $("#copyToClipboard").on("click", function() {
     $("#resultTxtArea").select()
