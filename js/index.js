@@ -55,7 +55,7 @@ $("#copyToClipboard").on("click", function() {
 })
 
 function throttle(f, throttleTimeout) {
-    f.called = Date.now()
+    f.called = 0 
     if (!throttleTimeout || throttleTimeout < 0) {
         throttleTimeout = 1000
     }

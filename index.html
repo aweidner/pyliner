@@ -14,6 +14,8 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
           crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.css">
   </head>
 
   <body>
@@ -27,11 +29,21 @@
         <form>
             <div class="form-group">
                 <label for="requirementsTxtForm">Contents of requirements.txt</label>
-                <textarea class="form-control" id="requirementsTxtArea" rows="3"></textarea>
+                <textarea class="form-control" id="requirementsTxtArea" rows="3">
+flask>=0.11</textarea>
             </div>
             <div class="form-group">
                 <label for="programForm">Program</label>
-                <textarea class="form-control" id="programTxtArea" rows="10"></textarea>
+                <textarea class="form-control" id="programTxtArea" rows="10">
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+if __name__ == "__main__":
+    app.run()</textarea>
             </div>
             <div class="form-group">
                 <label for="programForm">Output</label>
@@ -39,15 +51,43 @@
             </div>
             <button id="copyToClipboard" class="btn"></i>Copy to Clipboard</button>
         </form>
+
+        <br>
+        <h3>Why make this?</h3>
+        I needed to paste a python program that relied on some dependencies to someone.
+        I was originally using a
+        <a href = "http://jagt.github.io/python-single-line-convert/">different converter</a>
+        but this has a few problems:
+
+        <ol>
+            <li>You can't straight up paste this into your shell</li>
+            <li>You need to add pip install lines yourself for the dependencies</li>
+            <li>Bash sometimes doesn't like escapes and parens, etc.  Encoding to base64 dodges this</li>
+        </ol>
+        <br>
+        <h3>What shell/python interpreter does this work with?</h3>
+        Currently this only works with Python 3 and Bash.  It could be made to work
+        with other shells in the future.
+
+        <br><br>
+        <h3>Is this safe?</h3>
+        Only if you really trust the person sending you the paste 
     </main><!-- /.container -->
 
     <script
         src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous"></script>
-		
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
 
     <script src="js/index.js"></script>
+    <script>
+        CodeMirror.fromTextArea(document.getElementById("programTxtArea"), {
+            lineNumbers: true
+        })
+        updateTextArea()
+    </script>
   </body>
 </html>
 
