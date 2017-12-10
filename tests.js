@@ -38,3 +38,11 @@ QUnit.test("can convert contents of requirements.txt to single line", function(a
 QUnit.test("can create entire runnable program", function(assert) {
     assert.equal(createProgram('print("hello world")'), runnableProgram())
 })
+
+QUnit.test("can get the right and for command from fish shell", function(assert) {
+    assert.equal(fromShell("fish").and, "; and ")
+})
+
+QUnit.test("can get the right and for command from bash shell", function(assert) {
+    assert.equal(fromShell("bash").and, " && ")
+})

@@ -40,8 +40,22 @@ function getRequirementsPart() {
     return inlineRequirements($("#requirementsTxtArea").val())
 }
 
+function fromShell(shell) {
+    if (shell == "bash") {
+        return {
+            "and": " && "
+        }
+    } else if (shell == "fish") {
+        return {
+            "and": "; and "
+        }
+    }
+}
+
 var updateTextArea = throttle(function() {
-    contents = getRequirementsPart() + " && " + getProgramOutputPart()
+    shell = fromShell($("#shellSelect").val())
+
+    contents = getRequirementsPart() + shell.and + getProgramOutputPart()
     $("#resultTxtArea").val(contents)
 }, 100)
 
@@ -53,6 +67,8 @@ $("#copyToClipboard").on("click", function() {
     document.execCommand("copy")
     return false;
 })
+
+$("#shellSelect").on("change", updateTextArea)
 
 function throttle(f, throttleTimeout) {
     f.called = 0 
