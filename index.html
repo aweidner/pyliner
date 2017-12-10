@@ -80,11 +80,13 @@ if __name__ == "__main__":
         crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/python/python.min.js"></script>
 
     <script src="js/index.js"></script>
     <script>
         CodeMirror.fromTextArea(document.getElementById("programTxtArea"), {
-            lineNumbers: true
+            lineNumbers: true,
+            mode: "python"
         })
         updateTextArea()
     </script>
