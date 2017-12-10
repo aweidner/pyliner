@@ -17,48 +17,71 @@ function inlineTransform(code) {
     return lines.join('\n') + '\n';
 }
 
-function inlineRequirements(requirements) {
-    return "pip3 install " + requirements.trimRight().split('\n').join(" ");
+function inlineRequirements(requirements, pythonVersion) {
+    return pythonVersion.pip + " install " + requirements.trimRight().split('\n').join(" ");
 }
 
-function execute(base64EncodedProgram) {
-    return `python3 -c 'exec("""import base64\\nexec(base64.b64decode("${base64EncodedProgram}").decode("utf-8"))""")'`
+function execute(base64EncodedProgram, pythonVersion) {
+    return pythonVersion.python + " -c '" + 
+        pythonVersion.exec(
+            '"""import base64\\n' +
+            pythonVersion.exec(
+                `base64.b64decode("${base64EncodedProgram}").decode("utf-8")`) + '"""') + "'"
 }
 
-function inlineProgram(rawProgram) {
-    return execute(btoa(inlineTransform(rawProgram)))
+function inlineProgram(rawProgram, pythonVersion) {
+    return execute(btoa(inlineTransform(rawProgram)), pythonVersion)
 }
 
 function fromShell(shell) {
-    if (shell == "bash") {
+    if (shell === "bash") {
         return {
             "and": " && "
         }
-    } else if (shell == "fish") {
+    } else if (shell === "fish") {
         return {
             "and": "; and "
         }
     }
 }
 
-function makeFullOneLiner(requirements, shell, program) {
+function fromPythonVersion(pythonVersion) {
+    if (pythonVersion === "2") {
+        return {
+            "exec": function(code) { return  `exec ${code}` },
+            "python": "python",
+            "pip": "pip"
+        }
+    } else if (pythonVersion === "3") {
+        return {
+            "exec": function(code) { return `exec(${code})` },
+            "python": "python3",
+            "pip": "pip3"
+        }
+    }
+}
+
+function makeFullOneLiner(requirements, shell, program, pythonVersion) {
     if (!requirements) {
         return inlineProgram(program)
     }
-    return inlineRequirements(requirements) + fromShell(shell).and + inlineProgram(program)
+    return inlineRequirements(requirements, fromPythonVersion(pythonVersion)) +
+        fromShell(shell).and + inlineProgram(program, fromPythonVersion(pythonVersion))
 }
 
 function updateResult(program) {
     var oneLiner = makeFullOneLiner(
         $("#requirementsTxtArea").val(),
         $("#shellSelect").val(),
-        $("#programTxtArea").next('.CodeMirror')[0].CodeMirror.getValue())
+        $("#programTxtArea").next('.CodeMirror')[0].CodeMirror.getValue(),
+        $("#pythonVersionSelect").val())
     $("#resultTxtArea").val(oneLiner)
     lastProgramValue = program
 }
 
 $("#requirementsTxtArea").on("paste keyup", updateResult)
 $("#shellSelect").on("change", updateResult)
+$("#pythonVersionSelect").on("change", updateResult)
 
 $("#copyToClipboard").on("click", function() {
     $("#resultTxtArea").select()

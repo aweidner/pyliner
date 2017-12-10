@@ -32,11 +32,11 @@ QUnit.test("can single line a python expression", function(assert) {
 })
 
 QUnit.test("can convert contents of requirements.txt to single line", function(assert) {
-    assert.equal(inlineRequirements(requirementsTxtContents()), "pip3 install requests==1.10.0 btoa>=10.1 jinja2")
+    assert.equal(inlineRequirements(requirementsTxtContents(), fromPythonVersion("3")), "pip3 install requests==1.10.0 btoa>=10.1 jinja2")
 })
 
 QUnit.test("can create entire runnable program", function(assert) {
-    assert.equal(inlineProgram('print("hello world")'), runnableProgram())
+    assert.equal(inlineProgram('print("hello world")', fromPythonVersion("3")), runnableProgram())
 })
 
 QUnit.test("can get the right and for command from fish shell", function(assert) {
@@ -56,5 +56,17 @@ def hello():
     return "Hello World!"
 
 if __name__ == "__main__":
-    app.run()`))
+    app.run()`, "3"))
+})
+
+QUnit.test("can construct a full python2 program with the fish shell", function(assert) {
+    assert.equal(`pip install flask; and python -c 'exec """import base64\\nexec base64.b64decode("ZnJvbSBmbGFzayBpbXBvcnQgRmxhc2sKYXBwID0gRmxhc2soX19uYW1lX18pCgpAYXBwLnJvdXRlKCIvIikKZGVmIGhlbGxvKCk6CiAgICByZXR1cm4gIkhlbGxvIFdvcmxkISIKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBhcHAucnVuKCkK").decode("utf-8")"""'`, makeFullOneLiner("flask", "fish", `from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+if __name__ == "__main__":
+    app.run()`, "2"))
 })

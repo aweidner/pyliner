@@ -53,6 +53,13 @@ if __name__ == "__main__":
                 </select>
               </div>
             <div class="form-group">
+                <label for="pythonVersionSelect">Python Version</label>
+                <select class="form-control" id="pythonVersionSelect">
+                  <option>2</option>
+                  <option selected>3</option>
+                </select>
+              </div>
+            <div class="form-group">
                 <label for="programForm">Output</label>
                 <textarea class="form-control" id="resultTxtArea" rows="3" readOnly></textarea>
             </div>
@@ -72,11 +79,6 @@ if __name__ == "__main__":
             <li>Bash sometimes doesn't like escapes and parens, etc.  Encoding to base64 dodges this</li>
         </ol>
         <br>
-        <h3>What shell/python interpreter does this work with?</h3>
-        Currently this only works with Python 3 and Bash.  It could be made to work
-        with other shells in the future.
-
-        <br><br>
         <h3>Is this safe?</h3>
         Only if you really trust the person sending you the paste 
     </main><!-- /.container -->
