@@ -42,6 +42,9 @@ function fromShell(shell) {
 }
 
 function makeFullOneLiner(requirements, shell, program) {
+    if (!requirements) {
+        return inlineProgram(program)
+    }
     return inlineRequirements(requirements) + fromShell(shell).and + inlineProgram(program)
 }
 
