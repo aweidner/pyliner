@@ -36,7 +36,7 @@ QUnit.test("can convert contents of requirements.txt to single line", function(a
 })
 
 QUnit.test("can create entire runnable program", function(assert) {
-    assert.equal(createProgram('print("hello world")'), runnableProgram())
+    assert.equal(inlineProgram('print("hello world")'), runnableProgram())
 })
 
 QUnit.test("can get the right and for command from fish shell", function(assert) {
@@ -45,4 +45,16 @@ QUnit.test("can get the right and for command from fish shell", function(assert)
 
 QUnit.test("can get the right and for command from bash shell", function(assert) {
     assert.equal(fromShell("bash").and, " && ")
+})
+
+QUnit.test("can construct a full program with the fish shell", function(assert) {
+    assert.equal(`pip3 install flask; and python3 -c 'exec("""import base64\\nexec(base64.b64decode("ZnJvbSBmbGFzayBpbXBvcnQgRmxhc2sKYXBwID0gRmxhc2soX19uYW1lX18pCgpAYXBwLnJvdXRlKCIvIikKZGVmIGhlbGxvKCk6CiAgICByZXR1cm4gIkhlbGxvIFdvcmxkISIKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBhcHAucnVuKCkK").decode("utf-8"))""")'`, makeFullOneLiner("flask", "fish", `from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+if __name__ == "__main__":
+    app.run()`))
 })

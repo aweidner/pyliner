@@ -22,22 +22,11 @@ function inlineRequirements(requirements) {
 }
 
 function execute(base64EncodedProgram) {
-    program = `python3 -c 'exec("""import base64\\nexec(base64.b64decode("${base64EncodedProgram}").decode("utf-8"))""")'`
-
-    return program
+    return `python3 -c 'exec("""import base64\\nexec(base64.b64decode("${base64EncodedProgram}").decode("utf-8"))""")'`
 }
 
-function createProgram(rawProgram) {
+function inlineProgram(rawProgram) {
     return execute(btoa(inlineTransform(rawProgram)))
-}
-
-function getProgramOutputPart() {
-    return execute(
-        btoa(inlineTransform($("#programTxtArea").val())))
-}
-
-function getRequirementsPart() {
-    return inlineRequirements($("#requirementsTxtArea").val())
 }
 
 function fromShell(shell) {
@@ -52,50 +41,24 @@ function fromShell(shell) {
     }
 }
 
-var updateTextArea = throttle(function() {
-    shell = fromShell($("#shellSelect").val())
+function makeFullOneLiner(requirements, shell, program) {
+    return inlineRequirements(requirements) + fromShell(shell).and + inlineProgram(program)
+}
 
-    contents = getRequirementsPart() + shell.and + getProgramOutputPart()
-    $("#resultTxtArea").val(contents)
-}, 100)
+function updateResult(program) {
+    var oneLiner = makeFullOneLiner(
+        $("#requirementsTxtArea").val(),
+        $("#shellSelect").val(),
+        $("#programTxtArea").next('.CodeMirror')[0].CodeMirror.getValue())
+    $("#resultTxtArea").val(oneLiner)
+    lastProgramValue = program
+}
 
-$("#requirementsTxtArea").on("paste keyup", updateTextArea)
-$("#programTxtArea").on("paste keyup", updateTextArea)
+$("#requirementsTxtArea").on("paste keyup", updateResult)
+$("#shellSelect").on("change", updateResult)
 
 $("#copyToClipboard").on("click", function() {
     $("#resultTxtArea").select()
     document.execCommand("copy")
     return false;
 })
-
-$("#shellSelect").on("change", updateTextArea)
-
-function throttle(f, throttleTimeout) {
-    f.called = 0 
-    if (!throttleTimeout || throttleTimeout < 0) {
-        throttleTimeout = 1000
-    }
-
-    function callAfterDelay() {
-        f.queuedCall = undefined 
-        f.called = Date.now()
-        f()
-    }
-
-    function shouldCall() {
-        now = Date.now()
-        if (f.queuedCall) {
-            return
-        }
-
-        if (now - f.called >= throttleTimeout) {
-            f.called = now 
-            return f()
-        } else {
-            window.clearTimeout(f.queuedCall)
-            f.queuedCall = window.setTimeout(callAfterDelay, throttleTimeout - (now - f.called))
-        }
-    }
-
-    return shouldCall
-}

@@ -92,10 +92,9 @@ if __name__ == "__main__":
     <script src="js/index.js"></script>
     <script>
         CodeMirror.fromTextArea(document.getElementById("programTxtArea"), {
-            lineNumbers: true,
-            mode: "python"
-        })
-        updateTextArea()
+            lineNumbers: true
+        }).on("change", updateResult);
+        updateResult()
     </script>
   </body>
 </html>
