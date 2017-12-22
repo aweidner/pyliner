@@ -34,36 +34,31 @@ function inlineProgram(rawProgram, pythonVersion) {
 }
 
 function fromShell(shell) {
-    if (shell === "bash") {
-        return {
-            "and": " && "
-        }
-    } else if (shell === "fish") {
-        return {
-            "and": "; and "
-        }
-    }
+    return {
+        "bash": { "and": " && " },
+        "fish": { "and": "; and " }
+    }[shell]
 }
 
 function fromPythonVersion(pythonVersion) {
-    if (pythonVersion === "2") {
-        return {
+    return {
+        "2": {
             "exec": function(code) { return  `exec ${code}` },
             "python": "python",
             "pip": "pip"
-        }
-    } else if (pythonVersion === "3") {
-        return {
+        },
+        "3": {
             "exec": function(code) { return `exec(${code})` },
             "python": "python3",
             "pip": "pip3"
         }
-    }
+    }[pythonVersion]
 }
 
 function makeFullOneLiner(requirements, shell, program, pythonVersion) {
+    pythonVersionObject = fromPythonVersion(pythonVersion)
     if (!requirements) {
-        return inlineProgram(program)
+        return inlineProgram(program, pythonVersionObject)
     }
     return inlineRequirements(requirements, fromPythonVersion(pythonVersion)) +
         fromShell(shell).and + inlineProgram(program, fromPythonVersion(pythonVersion))
